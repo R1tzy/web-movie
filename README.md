@@ -1,4 +1,5 @@
 # Laravel Movie APP
+![movie app](https://user-images.githubusercontent.com/46581137/214459650-119fb3f9-def3-47d6-a216-34da8878b689.png)
 
 ## Installation
 
