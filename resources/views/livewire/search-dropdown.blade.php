@@ -4,6 +4,7 @@
     type="text" 
     placeholder="Pesquisar" class="text-sm w-64 rounded-full px-4 py-1 pl-8 focus:outline-none focus:shadow-outline bg-[#2c323b]"
     x-ref="search"
+    {{-- Fazer com que quando pressionado o Enter, mostrar todos os resultados possíveis --}}
     @keydown.window="
         if (event.keyCode === 191) {
             event.preventDefault();
@@ -22,9 +23,9 @@
     <div wire:loading class="spinner top-0 right-0 mt-3 mr-4"></div>
     @if (strlen($search) >= 2)
         <div class="z-50 absolute text-sm bg-[#2c323b] rounded w-64 mt-4" x-show.transition.opacity="isOpen">
-            @if ($searchResults->count() > 0)
+            @if ($movie->count() > 0)
                 <ul>
-                    @foreach ($searchResults as $result)  
+                    @foreach ($movie as $result)  
                         <li class="border-b border-gray-700">
                             <a 
                             href="{{route('movies.show',$result['id'])}}" class="block hover:bg-gray-700 px-3 py-3 flex items-center transition ease-in-out duration-150"
@@ -37,7 +38,42 @@
                                 @endif
                                 <span class="ml-4">{{$result['title']}}</span>
                             </a>
-                            
+                        </li>
+                    @endforeach
+                </ul>
+            @elseif ($people->count() > 0)
+                <ul>
+                    @foreach ($people as $result)  
+                        <li class="border-b border-gray-700">
+                            <a 
+                            href="{{route('actors.show',$result['id'])}}" class="block hover:bg-gray-700 px-3 py-3 flex items-center transition ease-in-out duration-150"
+                            @if ($loop->last) @keydown.tab="isOpen = false"@endif
+                            >
+                                @if ($result['profile_path'])
+                                    <img src="https://image.tmdb.org/t/p/w92/{{$result['profile_path']}}" alt="profile" class="w-8">
+                                @else
+                                    <img src="https://via.placeholder.com/50x75" alt="profile" class="w-8">   
+                                @endif
+                                <span class="ml-4">{{$result['name']}}</span>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            @elseif ($tv->count() > 0)
+                <ul>
+                    @foreach ($tv as $result)  
+                        <li class="border-b border-gray-700">
+                            <a 
+                            href="{{route('tv.show',$result['id'])}}" class="block hover:bg-gray-700 px-3 py-3 flex items-center transition ease-in-out duration-150"
+                            @if ($loop->last) @keydown.tab="isOpen = false"@endif
+                            >
+                                @if ($result['poster_path'])
+                                    <img src="https://image.tmdb.org/t/p/w92/{{$result['poster_path']}}" alt="profile" class="w-8">
+                                @else
+                                    <img src="https://via.placeholder.com/50x75" alt="profile" class="w-8">   
+                                @endif
+                                <span class="ml-4">{{$result['name']}}</span>
+                            </a>
                         </li>
                     @endforeach
                 </ul>

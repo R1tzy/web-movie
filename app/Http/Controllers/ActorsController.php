@@ -2,37 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\Api;
-use App\ViewModels\MoviesViewModel;
-use App\ViewModels\MovieViewModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Facades\Api;
+use App\ViewModels\ActorViewModel;
+use App\ViewModels\ActorsViewModel;
 
-class MovieController extends Controller
+
+class ActorsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($page = 1)
     {
-        $popularMovies = Api::get('/movie/popular?language=pt-BR')
-            ->json()['results'];
- 
-        $nowPlaying = Api::get('/movie/now_playing?language=pt-BR')
-            ->json()['results'];
+        abort_if($page > 500, 204);
 
-        $genres = Api::get('/genre/movie/list?language=pt-BR')
-            ->json()['genres'];
+        $popularActors = Api::get('/person/popular?language=pt-BR&page='. $page)
+        ->json()['results'];
 
-        $viewModel = new MoviesViewModel(
-            $popularMovies,
-            $nowPlaying,
-            $genres
-        );
+        $viewModel = new ActorsViewModel($popularActors, $page);
 
-        return view('movies.index' , $viewModel);
+        return view('actors.index', $viewModel);
     }
 
     /**
@@ -64,12 +56,15 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        $details = Api::get("/movie/$id?append_to_response=credits,videos,images&include_image_language=pt,null&language=pt-BR&region=BR")
-        ->json();
+        $actor = Api::get("/person/$id?language=pt-br&region=BR")->json();
+        
+        $social = Api::get("/person/$id/external_ids")->json();
 
-        $viewModel = new MovieViewModel($details);
+        $credits = Api::get("/person/$id/combined_credits?language=pt-BR&region=BR")->json();
 
-        return view('movies.show', $viewModel);
+        $viewModel = new ActorViewModel($actor, $social, $credits);
+
+        return view('actors.show',$viewModel);
     }
 
     /**

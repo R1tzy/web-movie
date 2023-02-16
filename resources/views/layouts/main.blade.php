@@ -25,10 +25,10 @@
                         <a href="{{route('movies.index')}}" class="hover:text-gray-400">Filmes</a>
                     </li>
                     <li>
-                        <a href="#" class="hover:text-gray-400">TV Shows</a>
+                        <a href="{{route('tv.index')}}" class="hover:text-gray-400">Programas de Tv</a>
                     </li>
                     <li>
-                        <a href="#" class="hover:text-gray-400">Atores</a>
+                        <a href="{{route("actors.index")}}" class="hover:text-gray-400">Atores</a>
                     </li>
                 </ul>
             </div>
@@ -51,5 +51,6 @@
         </div>
     </footer>
     <livewire:scripts/>
+    @yield('script')
 </body>
 </html>

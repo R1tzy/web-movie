@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\Api;
-use App\ViewModels\MoviesViewModel;
-use App\ViewModels\MovieViewModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Facades\Api;
+use App\ViewModels\TvsViewModel;
+use App\ViewModels\TvViewModel;
 
-class MovieController extends Controller
+class TvController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,22 +16,22 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $popularMovies = Api::get('/movie/popular?language=pt-BR')
-            ->json()['results'];
- 
-        $nowPlaying = Api::get('/movie/now_playing?language=pt-BR')
-            ->json()['results'];
+        $popularTv = Api::get('/tv/popular?language=pt-BR&region=BR')
+        ->json()['results'];
 
-        $genres = Api::get('/genre/movie/list?language=pt-BR')
-            ->json()['genres'];
+        $ratedTv = Api::get('/tv/top_rated?language=pt-BR')
+        ->json()['results'];
 
-        $viewModel = new MoviesViewModel(
-            $popularMovies,
-            $nowPlaying,
-            $genres
+        $genres = Api::get('/genre/tv/list?language=pt-BR')
+        ->json()['genres'];
+
+        $viewModel = new TvsViewModel(
+            $popularTv,
+            $genres,
+            $ratedTv
         );
 
-        return view('movies.index' , $viewModel);
+        return view('tvShows.index', $viewModel);
     }
 
     /**
@@ -64,12 +63,13 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        $details = Api::get("/movie/$id?append_to_response=credits,videos,images&include_image_language=pt,null&language=pt-BR&region=BR")
+        $details = Api::get("/tv/$id?append_to_response=credits,videos,images&include_image_language=pt,null&language=pt-BR&region=BR")
         ->json();
 
-        $viewModel = new MovieViewModel($details);
 
-        return view('movies.show', $viewModel);
+        $viewModel = new TvViewModel($details);
+        
+        return view('tvShows.show', $viewModel);
     }
 
     /**

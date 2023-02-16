@@ -11,6 +11,5 @@
             <span class="ml-1">{{$movies['release_date']}}</span>
         </div>
         <div class="text-gray-300 text-sm mt-1">{{$movies['genres']}}</div>
-        <!-- key dos genres indefinido ARRUMAR-->
     </div>
 </div>

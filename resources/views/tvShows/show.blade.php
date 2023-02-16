@@ -4,23 +4,18 @@
         <div class="movie-info flex lg:flex-row flex-col lg:gap-24 gap-8"> <!-- start movie info -->
             <div class="flex-none">
                 <a href="#">
-                    <img src="{{'https://image.tmdb.org/t/p/w500/'.$details['poster_path']}}" alt="movie-poster" class="rounded-md hover:opacity-75 transition ease-in-out duration-150 shadow shadow-gray-200/10 w-64 lg:w-96">
+                    <img src="{{$details['poster_path']}}" alt="tv-poster" class="rounded-md hover:opacity-75 transition ease-in-out duration-150 shadow shadow-gray-200/10 w-64 lg:w-96">
                 </a>
             </div>
             <div>
-                <h2 class="font-semibold text-4xl">{{$details['title']}}</h2>
+                <h2 class="font-semibold text-4xl">{{$details['name']}}</h2>
                 <div class="flex flex-row text-sm items-center mt-2 text-gray-300 flex-wrap">
                     <ion-icon name="star" class="text-orange-400 w-5 h-5"></ion-icon>
-                    <span class="ml-1">{{$details['vote_average']*10}}%</span>
+                    <span class="ml-1">{{$details['vote_average']}}</span>
                     <span class="mx-2">|</span>
-                    <span class="ml-1">{{\Carbon\Carbon::parse($details['release_date'])->isoFormat('D MMM, YYYY')}}</span>
+                    <span class="ml-1">{{$details['first_air_date']}}</span>
                     <span class="mx-2">|</span>
-                    <span class="ml-1">
-                        @foreach ($details['genres'] as $genre )
-                            {{$genre['name']}}@if(!$loop->last),    
-                            @endif
-                        @endforeach
-                    </span>
+                    <span class="ml-1">{{$details['genres']}}</span>
                 </div>
                 <p class="text-justify text-gray-300 mt-8">
                     {{$details['overview']}}
@@ -28,15 +23,11 @@
                 <div class="mt-12">
                     <h4 class="font-semibold">Equipe Técnica</h4>
                     <div class="flex mt-6 gap-8">
-                        @foreach ($details['credits']['crew'] as $crew)
-                            @if ($loop->index < 2)               
-                                <div>
-                                    <div>{{$crew['name']}}</div>
-                                    <div class="text-sm text-gray-400">{{$crew['job']}}</div>
-                                </div>
-                            @else
-                                @break
-                            @endif
+                        @foreach ($details['crew'] as $crew)            
+                            <div>
+                                <div>{{$crew['name']}}</div>
+                                <div class="text-sm text-gray-400 " >{{$crew['job']}}</div>
+                            </div>
                         @endforeach
                     </div>
                 </div>
@@ -85,20 +76,20 @@
         <div>
             <h2 class="font-semibold text-4xl">Elenco</h2>
             <div class="movie-cast flex flex-row gap-8 flex-wrap mt-8">
-                @foreach ($details['credits']['cast'] as $cast)
-                    @if ($loop->index < 5)
-                        <div>
-                            <a href="#">
+                @foreach ($details['cast'] as $cast)
+                    <div>
+                        <a href="{{route('actors.show',$cast['id'])}}">
+                            @if ($cast['profile_path'] === null)
+                                <img src="https://via.placeholder.com/224x336" alt="actor" class="rounded-md hover:opacity-75 transition ease-in-out duration-150 shadow w-56">
+                            @else
                                 <img src="{{'https://image.tmdb.org/t/p/w500/'.$cast['profile_path']}}" alt="actor" class="rounded-md hover:opacity-75 transition ease-in-out duration-150 shadow w-56">
-                            </a>
-                            <div class="mt-3">
-                                <a href="#" class="text-lg hover:text-gray-300">{{$cast['name']}}</a>
-                                <div class="text-sm text-gray-400">{{$cast['character']}}</div>
-                            </div>
+                            @endif
+                        </a>
+                        <div class="mt-3">
+                            <a href="{{route('actors.show',$cast['id'])}}" class="text-lg hover:text-gray-300">{{$cast['name']}}</a>
+                            <div class="text-sm text-gray-400 w-[14rem]">{{$cast['character']}}</div>
                         </div>
-                    @else
-                        @break
-                    @endif
+                    </div>
                 @endforeach
             </div>  
         </div>
@@ -108,20 +99,16 @@
         <div class="container mx-auto px-4 py-16"> <!-- start image-->
             <h2 class="font-semibold text-4xl">Imagens</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-                @foreach ($details['images']['backdrops'] as $img)
-                    @if ($loop->index < 9)
-                        <div>
-                            <a href="#"
-                            @click.prevent="
-                                isOpen = true
-                                image='{{ 'https://image.tmdb.org/t/p/original/'.$img['file_path'] }}'"
-                            >
-                                <img src="{{'https://image.tmdb.org/t/p/w500/'.$img['file_path']}}" alt="image" class="rounded hover:opacity-75 transition ease-in-out duration-150">
-                            </a>
-                        </div>
-                    @else
-                        @break
-                    @endif
+                @foreach ($details['images'] as $img)    
+                    <div>
+                        <a href="#"
+                        @click.prevent="
+                            isOpen = true
+                            image='{{ 'https://image.tmdb.org/t/p/original/'.$img['file_path'] }}'"
+                        >
+                            <img src="{{'https://image.tmdb.org/t/p/w500/'.$img['file_path']}}" alt="image" class="rounded hover:opacity-75 transition ease-in-out duration-150">
+                        </a>
+                    </div>     
                 @endforeach
             </div>
         </div>
